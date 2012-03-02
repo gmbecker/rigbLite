@@ -1,3 +1,5 @@
+setClassUnion("sockOrNULL", list("sockconn", "NULL"))
+
 igbSession = setRefClass("igbSession",
   fields = list(
     .port = "numeric",
@@ -7,7 +9,7 @@ igbSession = setRefClass("igbSession",
       else
         .port
     },
-    .connection = "sockconn",
+    .connection = "sockOrNULL",
     connection = function(value){
       if(!missing(value))
         .connection <<- value
@@ -33,16 +35,20 @@ igbSession = setRefClass("igbSession",
           args$port = port
         }
       .port <<- port
-      if(!is.null(args$connection))
+      if(is.null(args$connection))
         {
           con <- socketConnection(host = "localhost", port = port, open = "wa")
+          
         } else {
           con <- args$connection
         }
       .connection <<- con
+
     })
   )
 
+if(FALSE)
+  {
 setClass("igbTrack", representation(genome = "character", region = "numeric", chromosome = "character", loadMode = "character", dataFile = "character"))
 
 setMethod("genome<-", "igbTrack", function(object, ..., value)
@@ -86,7 +92,7 @@ setMethod("region<-", "igbTrack", function(object, ..., value)
 
 
 
-
+}
 ConnectToIGB = function(port = 7085)
   igbCon <<-socketConnection(host = "localhost", port = port, open ="wa")
 
