@@ -1,0 +1,5 @@
+importClassesFrom(rtracklayer, "Quickload", "QuickloadGenome")
+importMethodsFrom(rtracklayer, "genome", "genome<-", "track<-")
+exportPattern("^[[:alpha:]]+")
+exportMethods("ViewInIGB", "genome", "genome<-", "track<-")
+exportClasses("igbTrack", "igbSession")
