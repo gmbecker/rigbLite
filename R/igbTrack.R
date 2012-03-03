@@ -17,7 +17,7 @@ if (is.function( "genome" ))
 setMethod( f = genome , definition = function(x)
 {
 x@genome
-})
+} , signature = c( x = "igbTrack"))
 
 
 if (!isGeneric( "genome<-" )) {
@@ -33,7 +33,7 @@ setMethod( f = "genome<-" , definition = function(x , value)
 {
 x@genome = value
 x
-})
+} , signature = c( x = "igbTrack"))
 
 
 if (!isGeneric( "chromosome" )) {
@@ -48,7 +48,7 @@ if (is.function( "chromosome" ))
 setMethod( f = chromosome , definition = function(object , ...)
 {
 object@chromosome
-})
+} , signature = c( object = "igbTrack"))
 
 
 if (!isGeneric( "chromosome<-" )) {
@@ -64,7 +64,7 @@ setMethod( f = "chromosome<-" , definition = function(object , ... , value)
 {
 object@chromosome = value
 object
-})
+} , signature = c( object = "igbTrack"))
 
 
 if (!isGeneric( "region" )) {
@@ -79,7 +79,7 @@ if (is.function( "region" ))
 setMethod( f = region , definition = function(object , ...)
 {
 object@region
-})
+} , signature = c( object = "igbTrack"))
 
 
 if (!isGeneric( "region<-" )) {
@@ -95,7 +95,7 @@ setMethod( f = "region<-" , definition = function(object , ... , value)
 {
 object@region = value
 object
-})
+} , signature = c( object = "igbTrack"))
 
 
 if (!isGeneric( "loadmode" )) {
@@ -110,7 +110,7 @@ if (is.function( "loadmode" ))
 setMethod( f = loadmode , definition = function(object , ...)
 {
 object@loadmode
-})
+} , signature = c( object = "igbTrack"))
 
 
 if (!isGeneric( "loadmode<-" )) {
@@ -126,7 +126,7 @@ setMethod( f = "loadmode<-" , definition = function(object , ... , value)
 {
 object@loadmode = value
 object
-})
+} , signature = c( object = "igbTrack"))
 
 
 if (!isGeneric( "refresh" )) {
@@ -141,7 +141,7 @@ if (is.function( "refresh" ))
 setMethod( f = refresh , definition = function(object , ...)
 {
 object@refresh
-})
+} , signature = c( object = "igbTrack"))
 
 
 if (!isGeneric( "refresh<-" )) {
@@ -157,7 +157,7 @@ setMethod( f = "refresh<-" , definition = function(object , ... , value)
 {
 object@refresh = value
 object
-})
+} , signature = c( object = "igbTrack"))
 
 
 if (!isGeneric( "uri" )) {
@@ -172,7 +172,7 @@ if (is.function( "uri" ))
 setMethod( f = uri , definition = function(x , ...)
 {
 x@uri
-})
+} , signature = c( x = "igbTrack"))
 
 
 if (!isGeneric( "uri<-" )) {
@@ -188,4 +188,4 @@ setMethod( f = "uri<-" , definition = function(object , ... , value)
 {
 object@uri = value
 object
-})
+} , signature = c( object = "igbTrack"))
