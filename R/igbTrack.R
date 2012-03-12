@@ -4,7 +4,7 @@
 #
 #
 
- setClass( Class = "igbTrack" , representation = representation( genome = "character" , chromosome = "character" , region = "numeric" , loadmode = "character" , refresh = "logical" , uri = "character")) 
+ setClass( Class = "igbTrack" , representation = representation( genome = "character" , region = "GRanges" , loadmode = "character" , refresh = "logical" , uri = "character")) 
 if (!isGeneric( "genome" )) {
 if (is.function( "genome" ))
   fun <- get( "genome" , mode = "function")
@@ -14,7 +14,7 @@ if (is.function( "genome" ))
 }
 
 
-setMethod( f = genome , definition = function(x)
+setMethod( f = "genome" , definition = function(x)
 {
 x@genome
 } , signature = c( x = "igbTrack"))
@@ -36,37 +36,6 @@ x
 } , signature = c( x = "igbTrack"))
 
 
-if (!isGeneric( "chromosome" )) {
-if (is.function( "chromosome" ))
-  fun <- get( "chromosome" , mode = "function")
- else 
-  fun <- function(  object , ...  ) standardGeneric( "chromosome" )
- setGeneric( "chromosome" , fun)
-}
-
-
-setMethod( f = chromosome , definition = function(object , ...)
-{
-object@chromosome
-} , signature = c( object = "igbTrack"))
-
-
-if (!isGeneric( "chromosome<-" )) {
-if (is.function( "chromosome<-" ))
-  fun <- get( "chromosome<-" , mode = "function")
- else 
-  fun <- function(  object , ... , value  ) standardGeneric( "chromosome<-" )
- setGeneric( "chromosome<-" , fun)
-}
-
-
-setMethod( f = "chromosome<-" , definition = function(object , ... , value)
-{
-object@chromosome = value
-object
-} , signature = c( object = "igbTrack"))
-
-
 if (!isGeneric( "region" )) {
 if (is.function( "region" ))
   fun <- get( "region" , mode = "function")
@@ -76,7 +45,7 @@ if (is.function( "region" ))
 }
 
 
-setMethod( f = region , definition = function(object , ...)
+setMethod( f = "region" , definition = function(object , ...)
 {
 object@region
 } , signature = c( object = "igbTrack"))
@@ -107,7 +76,7 @@ if (is.function( "loadmode" ))
 }
 
 
-setMethod( f = loadmode , definition = function(object , ...)
+setMethod( f = "loadmode" , definition = function(object , ...)
 {
 object@loadmode
 } , signature = c( object = "igbTrack"))
@@ -138,7 +107,7 @@ if (is.function( "refresh" ))
 }
 
 
-setMethod( f = refresh , definition = function(object , ...)
+setMethod( f = "refresh" , definition = function(object , ...)
 {
 object@refresh
 } , signature = c( object = "igbTrack"))
@@ -169,7 +138,7 @@ if (is.function( "uri" ))
 }
 
 
-setMethod( f = uri , definition = function(x , ...)
+setMethod( f = "uri" , definition = function(x , ...)
 {
 x@uri
 } , signature = c( x = "igbTrack"))

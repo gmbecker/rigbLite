@@ -1,4 +1,4 @@
-setClassUnion("sockOrNULL", list("sockconn", "NULL"))
+setOldClass("sockconn")
 igbSession = setRefClass("igbSession",
   fields = list(
     .port = "numeric",
@@ -21,29 +21,25 @@ igbSession = setRefClass("igbSession",
     {
       ViewInIGB(x, ..., con = .self$connection)
     },
-    'setRegion' = function(x, chromosome="1")
+    'setRegion' = function(x)
     {
-      ViewInIGB(region = x, chromosome = chromosome, con = .self$connection)
+      ViewInIGB(region = x, con = .self$connection)
     },
     initialize = function(...)
     {
       args = list(...)
-      port = args$port
-      if(is.null(port))
-        {
-          port = 7085
-          args$port = port
-        }
-      .port <<- port
+      tmpport = args$port
+      if(is.null(tmpport))
+        tmpport = 7085
+        
+      .port <<- tmpport
       if(is.null(args$connection))
         {
-          
-          con <- tryCatch(socketConnection(host = "localhost", port = port, open = "wa"), error = function(e) stop("Unable to connect to IGB. Is it running on the the selected port?"))
-          
+          tmpcon <- tryCatch(socketConnection(host = "localhost", port = port, open = "wa"), error = function(e) stop("Unable to connect to IGB. Is it running on the the selected port?"))          
         } else {
-          con <- args$connection
+          tmpcon <- args$connection
         }
-      .connection <<- con
+      .connection <<- tmpcon
       
     })
   )
@@ -66,59 +62,9 @@ setMethod("region<-", representation(object = "igbSession"),
           }
  )
 
-if(FALSE)
-  {
-setClass("igbTrack", representation(genome = "character", region = "numeric", chromosome = "character", loadMode = "character", dataFile = "character"))
-
-setMethod("genome<-", "igbTrack", function(object, ..., value)
-          {
-            object@genome = track
-            object
-          })
-
-setMethod("genome", "igbTrack", function(object, ...)
-          object@genome
-          )
-
-setGeneric("loadmode", function(object) standardGeneric("loadmode"))
-setMethod("loadmode", "igbTrack", function(object) object@loadMode)
-
-setGeneric("loadmode<-", function(object, ..., value) standardGeneric("loadmode<-"))
-setMethod("loadmode<-", "igbTrack", function(object, ..., value) {
-  object@loadMode = value
-  object
-})
-
-setGeneric("chromosome", function(object) standardGeneric("chromosome"))
-setMethod("chromosome", "igbTrack", function(object) object@chromosome)
-
-setGeneric("chromosome<-", function(object, ..., value) standardGeneric("chromosome<-"))
-setMethod("chromosome<-", "igbTrack", function(object, ..., value)
-          {
-            object@chromosome = value
-            object
-          })
-
-setGeneric("region", function(object, ...) standardGeneric("region"))
-setMethod("region", "igbTrack", function(object, ...) object@region)
-
-setGeneric("region<-", function(object, ..., value) standardGeneric("region<-"))
-setMethod("region<-", "igbTrack", function(object, ..., value)
-          {
-            object@region = value
-            object
-          })
-
-
-
-}
-ConnectToIGB = function(port = 7085)
-  igbCon <<-socketConnection(host = "localhost", port = port, open ="wa")
-
-
 showInIGB =   function( con,
                         genome = NULL,
-                        goto,
+                        goto = NULL,
                         dataFile = NULL, 
                         loadMode,
                         refresh = TRUE, 
@@ -133,9 +79,12 @@ showInIGB =   function( con,
   script = NULL
   if(!is.null(genome))
     script = c(script, paste("genome", genome))
-  if(!missing(goto))
-    script = c(script, paste("goto", goto))
-  if(!is.null(dataFile))
+  if(!is.null(goto))
+    {
+      goto = paste(as.character(seqnames(goto)), ":", paste(start(goto), end(goto), sep="-"), sep="")
+      script = c(script, paste("goto", goto))
+    }
+    if(!is.null(dataFile))
     {
       script = c(script, paste("load", dataFile))
       if(!missing(loadMode))
@@ -150,20 +99,14 @@ showInIGB =   function( con,
 } 
 
 setGeneric("ViewInIGB",
-           function(x, genome = NULL, dataFile = NULL, chromosome = 1, region = NULL, loadMode = "REGION_IN_VIEW", refresh = TRUE, con = socketConnection("localhost", port = 7085, open ="wa"))
+           function(x, genome = NULL, dataFile = NULL, region = NULL, loadMode = "REGION_IN_VIEW", refresh = TRUE, con = socketConnection("localhost", port = 7085, open ="wa"))
            {
-             if(!is.null(region))
-               {
-                 if (is.numeric(region))
-                   region = paste(region, collapse = "-")
-                 region = paste(chromosome, region, sep=":")
-               }
              standardGeneric("ViewInIGB")
            })
 
 
 setMethod("ViewInIGB", representation(x = "QuickloadGenome", dataFile = "character"),
-          function(x, genome = NULL, dataFile = NULL,chromosome = 1, region = NULL, loadMode = "REGION_IN_VIEW", refresh = TRUE, con = socketConnection("localhost", port = 7085, open ="wa"))
+          function(x, genome = NULL, dataFile = NULL, region = NULL, loadMode = "REGION_IN_VIEW", refresh = TRUE, con = socketConnection("localhost", port = 7085, open ="wa"))
           {
             showInIGB(genome = genome(x),
                       goto = region,
@@ -176,7 +119,7 @@ setMethod("ViewInIGB", representation(x = "QuickloadGenome", dataFile = "charact
 
 
 setMethod("ViewInIGB", representation(x = "Quickload", genome = "character", dataFile = "character"),
-          function(x, genome = NULL, dataFile = NULL, chromosome = 1, region = NULL, loadMode = "REGION_IN_VIEW", refresh = TRUE,con = socketConnection("localhost", port = 7085, open ="wa"))
+          function(x, genome = NULL, dataFile = NULL, region = NULL, loadMode = "REGION_IN_VIEW", refresh = TRUE,con = socketConnection("localhost", port = 7085, open ="wa"))
           {
             
             if(is.null(genome))
@@ -192,7 +135,7 @@ setMethod("ViewInIGB", representation(x = "Quickload", genome = "character", dat
 
 
 setMethod("ViewInIGB", representation(x = "ANY", dataFile = "character"),
-          function(x, genome = NULL, dataFile = NULL, chromosome = 1, region = NULL, loadMode = "REGION_IN_VIEW", refresh = TRUE, con = socketConnection("localhost", port = 7085, open ="wa"))
+          function(x, genome = NULL, dataFile = NULL, region = NULL, loadMode = "REGION_IN_VIEW", refresh = TRUE, con = socketConnection("localhost", port = 7085, open ="wa"))
           {
             
             
@@ -206,11 +149,11 @@ setMethod("ViewInIGB", representation(x = "ANY", dataFile = "character"),
 
 
 setMethod("ViewInIGB", representation(x="igbTrack"),
-          function(x, genome = NULL, dataFile = NULL, chromosome = 1, region = NULL, loadMode = "REGION_IN_VIEW", refresh = TRUE, con = socketConnection("localhost", port = 7085, open ="wa"))
+          function(x, genome = NULL, dataFile = NULL, region = NULL, loadMode = "REGION_IN_VIEW", refresh = TRUE, con = socketConnection("localhost", port = 7085, open ="wa"))
           {
-            goto = paste(chromosome(x), ":", paste(region(x), collapse="-"))
+            
             showInIGB(genome = genome(x),
-                      goto= goto,
+                      goto= region(x),
                       loadMode = loadmode(x),
                       dataFile = uri(x),
                       refresh = refresh(x),
@@ -220,13 +163,8 @@ setMethod("ViewInIGB", representation(x="igbTrack"),
           })
 
 setMethod("ViewInIGB", representation(x="ANY"),
-          function(x, genome = NULL, dataFile = NULL, chromosome = 1, region = NULL, loadMode = "REGION_IN_VIEW", refresh = TRUE, con = socketConnection("localhost", port = 7085, open ="wa"))
+          function(x, genome = NULL, dataFile = NULL, region = NULL, loadMode = "REGION_IN_VIEW", refresh = TRUE, con = socketConnection("localhost", port = 7085, open ="wa"))
           {
-            #if (!is.null(region))
-            #  goto = paste(chromosome, ":", paste(region, collapse="-"), collapse = "")
-           # else
-           #   goto = NULL
-            print(region)
             showInIGB(genome = genome,
                       goto= region,
                       loadMode = loadMode,
