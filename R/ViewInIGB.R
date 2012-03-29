@@ -1,4 +1,15 @@
+
+igbTrackList = function(...)
+  {
+    els = list(...)
+    new("igbTrackList", region = region(els[[1]]), genome = genome(els[[1]]),  els)
+  }
+
+igbTrack = function(genome, region, uri, loadmode="REGION_IN_VIEW", refresh=TRUE)
+  new("igbTrack", genome=genome, region=region, loadmode=loadmode, refresh = refresh, uri=uri)
+
 setOldClass("sockconn")
+
 igbSession = setRefClass("igbSession",
   fields = list(
     .port = "numeric",
@@ -44,12 +55,21 @@ igbSession = setRefClass("igbSession",
     })
   )
 
-
+setGeneric("track<-", function(object, ..., value) standardGeneric("track<-"))
 
 setMethod("track<-", representation(object = "igbSession", value="igbTrack"), function(object, ..., value)
           {
 
             object$showTrack(value, ...)
+            object
+          })
+
+setGeneric("trackList<-", function(object, ..., value) standardGeneric("trackList<-"))
+
+setMethod("trackList<-", representation(object = "igbSession", value = "igbTrackList"), function(object, ... , value)
+          {
+            sapply(value@.Data, function(val)
+                   object$showTrack(val, ...))
             object
           })
 
@@ -151,7 +171,6 @@ setMethod("ViewInIGB", representation(x = "ANY", dataFile = "character"),
 setMethod("ViewInIGB", representation(x="igbTrack"),
           function(x, genome = NULL, dataFile = NULL, region = NULL, loadMode = "REGION_IN_VIEW", refresh = TRUE, con = socketConnection("localhost", port = 7085, open ="wa"))
           {
-            
             showInIGB(genome = genome(x),
                       goto= region(x),
                       loadMode = loadmode(x),
@@ -171,6 +190,10 @@ setMethod("ViewInIGB", representation(x="ANY"),
                       dataFile = dataFile,
                       refresh = refresh,
                       con = con)
+          })
 
-
+setMethod("ViewInIGB", representation(x = "igbTrackList"),
+          function(x, genome = NULL, dataFile = NULL, region = NULL, loadMode = "REGION_IN_VIEW", refresh = TRUE, con = socketConnection("localhost", port = 7085, open ="wa"))
+          {
+            sapply(x@.Data, ViewInIGB, con = con)
           })
