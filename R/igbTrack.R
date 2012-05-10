@@ -8,7 +8,7 @@
 
 
 
-setClass( Class  =  "igbTrack" , representation  =  representation( genome  =  "character" , region  =  "GRanges" , loadmode  =  "character" , refresh  =  "logical" , uri  =  "character"))
+setClass( Class  =  "igbTrack" , representation  =  representation( genome  =  "character" , loadmode  =  "character" , refresh  =  "logical" , uri  =  "character"))
 
 
 if (!isGeneric( "genome" )) {
@@ -40,37 +40,6 @@ setMethod( f  =  "genome<-" , definition  =  function(x , value)
 x@genome = value
 x
 } , signature  =  c( x  =  "igbTrack"))
-
-
-if (!isGeneric( "region" )) {
-if (is.function( "region" ))
-  fun <- get( "region" , mode = "function")
- else 
-  fun <- function(  object , ...  ) standardGeneric( "region" )
- setGeneric( "region" , fun)
-}
-
-
-setMethod( f  =  "region" , definition  =  function(object , ...)
-{
-object@region
-} , signature  =  c( object  =  "igbTrack"))
-
-
-if (!isGeneric( "region<-" )) {
-if (is.function( "region<-" ))
-  fun <- get( "region<-" , mode = "function")
- else 
-  fun <- function(  object , ... , value  ) standardGeneric( "region<-" )
- setGeneric( "region<-" , fun)
-}
-
-
-setMethod( f  =  "region<-" , definition  =  function(object , ... , value)
-{
-object@region = value
-object
-} , signature  =  c( object  =  "igbTrack"))
 
 
 if (!isGeneric( "loadmode" )) {

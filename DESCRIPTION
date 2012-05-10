@@ -8,5 +8,5 @@ Maintainer: Gabriel Becker <gmbecker@ucdavis.edu>
 Description: This package allows R uses to send instructions to a running (external) IGB session. These include navigating to a genome, loading data (adding a track), chaning the viewing region, etc.
 Depends:methods
 Imports:rtracklayer, GenomicRanges
-Collate:igbTrack.R igbTrackList.R ViewInIGB.R rigbLite-internal.R
-License: Artistic-2.0
+Collate: classes.R  igbTrack.R igbTrackList.R ViewInIGB.R igbSession-interface.R showMethods.R
+License: Artistic-2.0			  

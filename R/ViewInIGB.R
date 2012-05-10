@@ -1,87 +1,21 @@
 
-igbTrackList = function(...)
+igbTrackList = function(..., genome)
   {
     els = list(...)
-    new("igbTrackList", region = region(els[[1]]), genome = genome(els[[1]]),  els)
+    if(missing(genome))
+      {
+
+        if(length(els))
+          genome = genome(els[[1]])
+        else
+          stop("Unable to determine genome of new igbTrackList to be created.")
+      }  
+
+    new("igbTrackList", genome = genome,  els)
   }
 
-igbTrack = function(genome, region, uri, loadmode="REGION_IN_VIEW", refresh=TRUE)
-  new("igbTrack", genome=genome, region=region, loadmode=loadmode, refresh = refresh, uri=uri)
-
-setOldClass("sockconn")
-
-igbSession = setRefClass("igbSession",
-  fields = list(
-    .port = "numeric",
-    port = function(value){
-      if(!missing(value))
-        .port <<- value
-      else
-        .port
-    },
-    #.connection = "sockOrNULL",
-    .connection = "sockconn",
-    connection = function(value){
-      if(!missing(value))
-        .connection <<- value
-      else
-        .connection
-    }),
-  methods = list(
-    'showTrack' = function(x, ...)
-    {
-      ViewInIGB(x, ..., con = .self$connection)
-    },
-    'setRegion' = function(x)
-    {
-      ViewInIGB(region = x, con = .self$connection)
-    },
-    initialize = function(...)
-    {
-      args = list(...)
-      tmpport = args$port
-      if(is.null(tmpport))
-        tmpport = 7085
-        
-      .port <<- tmpport
-      if(is.null(args$connection))
-        {
-          tmpcon <- tryCatch(socketConnection(host = "localhost", port = port, open = "wa"), error = function(e) stop("Unable to connect to IGB. Is it running on the the selected port?"))          
-        } else {
-          tmpcon <- args$connection
-        }
-      .connection <<- tmpcon
-      
-    })
-  )
-
-setGeneric("track<-", function(object, ..., value) standardGeneric("track<-"))
-
-setMethod("track<-", representation(object = "igbSession", value="igbTrack"), function(object, ..., value)
-          {
-
-            object$showTrack(value, ...)
-            object
-          })
-
-setGeneric("trackList<-", function(object, ..., value) standardGeneric("trackList<-"))
-
-setMethod("trackList<-", representation(object = "igbSession", value = "igbTrackList"), function(object, ... , value)
-          {
-            sapply(value@.Data, function(val)
-                   object$showTrack(val, ...))
-            object
-          })
-
-#I should decide whether region means just aa position, or aa position + chromosome. Not being consistent!
-setMethod("region<-", representation(object = "igbSession"),
-          function(object, ..., value)
-          {
-            object$setRegion(value, ...)
-            object
-          }
- )
-
+igbTrack = function(genome, uri, loadmode="REGION_IN_VIEW", refresh=TRUE)
+  new("igbTrack", genome=genome, loadmode=loadmode, refresh = refresh, uri=uri)
 showInIGB =   function( con,
                         genome = NULL,
                         goto = NULL,
@@ -172,7 +106,6 @@ setMethod("ViewInIGB", representation(x="igbTrack"),
           function(x, genome = NULL, dataFile = NULL, region = NULL, loadMode = "REGION_IN_VIEW", refresh = TRUE, con = socketConnection("localhost", port = 7085, open ="wa"))
           {
             showInIGB(genome = genome(x),
-                      goto= region(x),
                       loadMode = loadmode(x),
                       dataFile = uri(x),
                       refresh = refresh(x),

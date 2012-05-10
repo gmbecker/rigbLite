@@ -1,6 +1,7 @@
 \name{igbTrack-class}
 \Rdversion{1.1}
 \docType{class}
+\alias{igbTrack}
 \alias{igbTrack-class}
 \alias{genome<-,igbTrack-method}
 \alias{genome,igbTrack-method}
@@ -11,6 +12,7 @@
 \alias{region<-,igbTrack-method}
 \alias{region,igbTrack-method}
 \alias{uri<-,igbTrack-method}
+\alias{uri,igbTrack-method}
 \alias{ViewInIGB,igbTrack,ANY,ANY-method}
 
 \title{Class \code{"igbTrack"}}
@@ -26,9 +28,6 @@ Objects can be created by calls of the form \code{new("igbTrack", ...)}.
   \describe{
     \item{\code{genome}:}{A character value indicating the genome in
       question. Must be of the form used by IGB, eg H_apiens_Feb_2009}
-    \item{\code{region}:}{GRanges object indicating the viewing region
-      for the track. The name of the chromosome to be viewed must be in
-      the \code{seqnames} slot.}
     \item{\code{loadmode}:}{Character value indicating how the data should be loaded. Must be
     one of "REGION_IN_VIEW", "WHOLE_CHROMOSOME", and "WHOLE_GENOME"}
     \item{\code{refresh}:}{Logical indicating whether the view should be refreshed after
@@ -40,16 +39,15 @@ Objects can be created by calls of the form \code{new("igbTrack", ...)}.
 }
 \section{Methods}{
   \describe{
-    \item{genome<-}{Sets the \code{genome} slot of the track. }
-    \item{genome}{Returns the current value of the \code{genome} slot. }
-    \item{loadmode<-}{Sets the \code{loadmode} slot of the track.}
-    \item{loadmode}{Returns the current value of the \code{loadmode} slot. }
-    \item{refresh<-}{Sets the \code{refresh} slot of the track.}
-    \item{refresh}{Returns the current value of the refresh slot.}
-    \item{region<-}{Sets the \code{region} slot of the track.}
-    \item{region}{Returns the current value of the \code{region} slot.}
+    \item{genome<-}{Sets the \code{genome} value for the track. }
+    \item{genome}{Returns the current value genome of the track. }
+    \item{loadmode<-}{Sets the \code{loadmode} value for the track.}
+    \item{loadmode}{Returns the current \code{loadmode} for the slot. }
+    \item{refresh<-}{Sets the \code{refresh} value for the track.}
+    \item{refresh}{Returns the current refresh value for the track.}
     \item{track<-}{Displays the indicated \code{igbTrack} in the \code{igbSession}}
-    \item{uri<-}{Sets the \code{uri} slot of the track. }
+    \item{uri<-}{Sets the URI of the data to be displayed by the track. }
+    \item{uri}{Returns the URI for the data displayed by the track. }
     \item{ViewInIGB}{Show track in running IGB session}
 	 }
 }
@@ -64,7 +62,11 @@ Objects can be created by calls of the form \code{new("igbTrack", ...)}.
 \code{\linkS4class{igbSession}} 
 }
 \examples{
-showClass("igbTrack")
+hsaptrk =igbTrack(genome = "H_sapiens_Feb_2009",
+  uri="http://netaffxdas.affymetrix.com/quickload_data/H_sapiens_Feb_2009/cytoBand.cyt",
+  loadmode="REGION_IN_VIEW", refresh=TRUE
+  )
+
 }
 \keyword{igbTrack}
 \keyword{igb}
