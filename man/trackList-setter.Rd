@@ -30,7 +30,7 @@ tracks contained in \code{value}. It does not have a meaningful return value.
   Gabriel Becker
 }
 \seealso{
-
+  \code{\link{igbTrackList}}
 }
 \examples{
 \dontrun{

@@ -1,8 +1,8 @@
 
-igbTrackList = function(..., genome)
+igbTrackList = function(..., genome = NULL)
   {
     els = list(...)
-    if(missing(genome))
+    if(is.null(genome))
       {
 
         if(length(els))

@@ -72,6 +72,12 @@ showInIGB(con, genome = NULL, goto = NULL, dataFile = NULL, loadMode, refresh = 
   \code{\link{ViewInIGB}}
 }
 \examples{
+\dontrun{
+showInIGB(con = socket("localhost", "7085"), genome
+="H_sapiens_Feb_2009", dataFile =
+"http://netaffxdas.affymetrix.com/quickload_data/H_sapiens_Feb_2009/cytoBand.cyt",
+loadmode = "REGION_IN_VIEW")
+}
 }
 \keyword{ IGB }
 \keyword{ Genome }

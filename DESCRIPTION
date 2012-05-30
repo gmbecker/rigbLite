@@ -1,12 +1,13 @@
 Package: rigbLite
 Type: Package
 Title: Control IGB From R
-Version: 0.1
-Date: 2012-02-24
+Version: 0.0.1
+Date: 2012-05-22
 Author: Gabriel Becker
 Maintainer: Gabriel Becker <gmbecker@ucdavis.edu>
-Description: This package allows R uses to send instructions to a running (external) IGB session. These include navigating to a genome, loading data (adding a track), chaning the viewing region, etc.
+Description: This package allows R uses to send instructions to a running (external) IGB session. These include navigating to a genome, loading data (adding a track), changing the viewing region, create snapshots, etc.
 Depends:methods
 Imports:rtracklayer, GenomicRanges
+biocViews: Visualization, Bioinformatics
 Collate: classes.R  igbTrack.R igbTrackList.R ViewInIGB.R igbSession-interface.R showMethods.R
 License: Artistic-2.0			  
